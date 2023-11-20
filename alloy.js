@@ -43,6 +43,7 @@ for (let i = 0; i < data.length; i++) {
   let fieldName = data[i]["Fields"];
   let fieldData = data[i]["Components/data"];
 
+  console.log({fieldData});
   /** We will append data to xml string from different column only if data will present in this column "Components/data" of the row*/
   if (fieldData) {
     fieldData = replaceSymbolsWithEntities(fieldData); // checking all the text if there will be any symbol it will convert to the entity and return the string
@@ -55,6 +56,11 @@ for (let i = 0; i < data.length; i++) {
       xmlString += `<document pn="${fieldData}">`;
     }
 
+    if(fieldName === "TXT"){
+      fieldData = fieldData.replace(/§\s*/g, '&lt;p&gt;').replace(/\n/g, '&lt;/p&gt;');
+      fieldData += '&lt;/p&gt;'
+    }
+    console.log("----",{fieldData});
     if (fieldName === "EDIT" && fieldName !== "PRES" && fieldName !== "OPT") {
       prevEdit = true;
       xmlString += "<edit>";
