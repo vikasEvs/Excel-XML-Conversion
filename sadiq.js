@@ -41,8 +41,8 @@ function replaceSymbolsWithEntities(inputString) {
 for (let i = 0; i < data.length; i++) {
 
   /** First we are getting the data of Column "Fields" and "Components/data" */
-  let fieldName = data[i]["Fields"];
-  let fieldData = data[i]["Components/data"];
+  let fieldName = data[i]["Fields"]?data[i]["Fields"].trim():data[i]["Fields"];
+  let fieldData = data[i]["Components/data"]?data[i]["Components/data"].trim():data[i]["Components/data"];
 
   /** We will append data to xml string from different column only if data will present in this column "Components/data" of the row*/
   if (fieldData) {
