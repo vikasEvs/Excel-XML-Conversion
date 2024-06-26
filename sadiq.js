@@ -19,6 +19,8 @@ let xmlString = `<exchange date="${new Date().toISOString()}" type="SADIQ" schem
 let prevEdit = false;
 let prevPro = false;
 let prevDoc = false;
+let prevApp = false;
+let prevInf = false;
 
 /** Object of Symbols which need to be converted into there html entity */
 const symbolToEntity = {
@@ -39,7 +41,6 @@ function replaceSymbolsWithEntities(inputString) {
 
 /** Here we will iterate to every row of excel to get data and insert into xml string */
 for (let i = 0; i < data.length; i++) {
-
   /** First we are getting the data of Column "Fields" and "Components/data" */
   let fieldName = data[i]["Fields"]?data[i]["Fields"].trim():data[i]["Fields"];
   let fieldData = data[i]["Components/data"]?data[i]["Components/data"].trim():data[i]["Components/data"];
@@ -56,6 +57,26 @@ for (let i = 0; i < data.length; i++) {
       xmlString += `<document pn="${fieldData}">`;
     }
 
+    if (fieldName === "APP") {
+      prevApp = true;
+      xmlString += `<app>${fieldData}`;
+    } else if (!fieldName && prevApp) {
+      xmlString += `${fieldData}`;
+    } else if (fieldName && prevApp) {
+      xmlString += `</app>`;
+      prevApp = false;
+    }
+    
+    if (fieldName === "INF") {
+      prevInf = true;
+      xmlString += `<inf>${fieldData}`;
+    } else if (!fieldName && prevInf) {
+      xmlString += `${fieldData}`;
+    } else if (fieldName && prevInf) {
+      xmlString += `</inf>`;
+      prevInf = false;
+    }
+
     if (fieldName === "EDIT") {
       prevEdit = true;
       xmlString += "<edit>";
@@ -69,7 +90,7 @@ for (let i = 0; i < data.length; i++) {
       const startValue = data[i]["Lower value"];
       const endValue = data[i]["Higher value"];
       xmlString += `<item name="${itemName}" start="${startValue}" end="${endValue}"/>`;
-    } else if (fieldName && fieldName !== "PN") {
+    } else if (fieldName && fieldName !== "PN" && fieldName !== "APP" && fieldName !== "INF") {
       if (prevEdit) {
         xmlString += "</edit>";
         prevEdit = false;
