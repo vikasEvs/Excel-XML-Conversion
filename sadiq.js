@@ -3,7 +3,7 @@ const fs = require("fs");
 const xlsx = require("xlsx");
 
 //read the file with name clientSadiq
-const workbook = xlsx.readFile("clientSadiq.xlsx");
+const workbook = xlsx.readFile("clientSadiq4.xlsx");
 
 /** Select sheet where data is present, which we want to use */
 const sheet = workbook.Sheets["All Data"];
@@ -51,10 +51,27 @@ for (let i = 0; i < data.length; i++) {
     if (i === 0 && fieldName === "PN") {
       prevDoc = true;
       xmlString += `<document pn="${fieldData}">`;
-    } else if (!prevDoc && fieldName === "PN") {
-      prevDoc = true;
-      xmlString += "</document>";
-      xmlString += `<document pn="${fieldData}">`;
+    } else if (fieldName === "PN") {
+      if(prevApp){
+        xmlString += `</app>`;
+        prevApp = false;
+      }
+      if(prevEdit){
+        xmlString += `</edit>`;
+        prevEdit = false;
+      }
+      if(prevInf){
+        xmlString += `</inf>`;
+        prevInf = false;
+      }
+      if (prevDoc) {
+        xmlString += "</document>";
+        prevDoc = false;
+      }
+      if(!prevDoc){
+        prevDoc = true;
+        xmlString += `<document pn="${fieldData}">`;
+      }
     }
 
     if (fieldName === "APP") {
@@ -102,32 +119,37 @@ for (let i = 0; i < data.length; i++) {
       ) {
         prevPro = true;
         xmlString += `<${fieldName.toLowerCase()}>${fieldData}`;
-        prevDoc = false;
       } else {
         xmlString += `<${fieldName.toLowerCase()}>${fieldData}</${fieldName.toLowerCase()}>`;
-      }
-
-      if (data.length !== i + 1 && data[i + 1]["Fields"] === "PN") {
-        prevDoc = false;
       }
     } else if (!fieldName && prevPro) {
       if (data.length !== i + 1 && !data[i + 1]["Fields"]) {
         prevPro = true;
-        prevDoc = false;
         xmlString += `${fieldData}`;
       } else {
         prevPro = false;
-        prevDoc = false;
         xmlString += `${fieldData}</pro>`;
       }
     }
-  } else if (data.length !== i + 1 && data[i + 1]["Fields"] === "PN") {
-    prevDoc = false;
-  }
+  } 
 }
 
-/** In last appending the closing tag in xml string */
-xmlString += "</document>";
+/** In last appending the closing tag in XML string */
+if (prevApp) {
+  xmlString += `</app>`;
+}
+if (prevEdit) {
+  xmlString += `</edit>`;
+}
+if (prevInf) {
+  xmlString += `</inf>`;
+}
+if (prevPro) {
+  xmlString += `</pro>`;
+}
+if (prevDoc) {
+  xmlString += "</document>";
+}
 xmlString += "</exchange>";
 
 fs.writeFileSync("outputSadiq.xml", xmlString);
