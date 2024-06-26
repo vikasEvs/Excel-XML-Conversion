@@ -1,6 +1,6 @@
 //import Library to use in the code
-const fs = require("fs");
-const xlsx = require("xlsx");
+import fs from "fs";
+import xlsx from 'xlsx';
 
 //read the file with name clientAlloy
 const workbook = xlsx.readFile("clientAlloy.xlsx");
@@ -18,6 +18,7 @@ let xmlString = `<exchange date="${new Date().toISOString()}" type="ALLOYS" sche
 //Some global variable
 let prevEdit = false;
 let prevDoc = false;
+let prevKw = false;
 
 /** Object of Symbols which need to be converted into there html entity */
 const symbolToEntity = {
@@ -38,13 +39,14 @@ function replaceSymbolsWithEntities(inputString) {
 
 /** Here we will iterate to every row of excel to get data and insert into xml string */
 for (let i = 0; i < data.length; i++) {
-
+  console.log("*******",data[i]);
   /** First we are getting the data of Column "Fields" and "Components/data" */
-  let fieldName = data[i]["Fields"];
+  let fieldName = data[i]["Fields"]? data[i]["Fields"].trim(): data[i]["Fields"];
   let fieldData = data[i]["Components/data"];
 
   /** We will append data to xml string from different column only if data will present in this column "Components/data" of the row*/
   if (fieldData) {
+    console.log("FIELDNAME-->>",fieldName, fieldData);
     fieldData = replaceSymbolsWithEntities(fieldData); // checking all the text if there will be any symbol it will convert to the entity and return the string
     if (i === 0 && fieldName === "PN") {
       prevDoc = true;
@@ -54,7 +56,9 @@ for (let i = 0; i < data.length; i++) {
       xmlString += "</document>";
       xmlString += `<document pn="${fieldData}">`;
     }
-
+    if(fieldName === "KW"){
+      fieldData = fieldData.replace(/#/g, "&lt;br/&gt;");
+    }
     if(fieldName === "TXT"){
       fieldData = fieldData.replace(/§\s*/g, '&lt;p&gt;').replace(/\n/g, '&lt;/p&gt;');
       fieldData += '&lt;/p&gt;'
@@ -73,6 +77,7 @@ for (let i = 0; i < data.length; i++) {
       fieldName !== "PRES" &&
       fieldName !== "OPT"
     ) {
+      console.log("1");
       prevEdit = true;
       const itemName = fieldData;
       const startValue = data[i]["Min"];
@@ -84,7 +89,8 @@ for (let i = 0; i < data.length; i++) {
       fieldName !== "PN" &&
       fieldName !== "PRES" &&
       fieldName !== "OPT"
-    ) {
+      ) {
+      console.log("2");
       if (prevEdit) {
         xmlString += "</edit>";
         prevEdit = false;
@@ -95,6 +101,7 @@ for (let i = 0; i < data.length; i++) {
       }
     }
   } else if (data.length !== i + 1 && data[i + 1]["Fields"] === "PN") {
+    console.log("3");
     prevDoc = false;
   }
 }
