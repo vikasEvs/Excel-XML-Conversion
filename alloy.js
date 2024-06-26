@@ -39,14 +39,12 @@ function replaceSymbolsWithEntities(inputString) {
 
 /** Here we will iterate to every row of excel to get data and insert into xml string */
 for (let i = 0; i < data.length; i++) {
-  console.log("*******",data[i]);
   /** First we are getting the data of Column "Fields" and "Components/data" */
   let fieldName = data[i]["Fields"]? data[i]["Fields"].trim(): data[i]["Fields"];
   let fieldData = data[i]["Components/data"];
 
   /** We will append data to xml string from different column only if data will present in this column "Components/data" of the row*/
   if (fieldData) {
-    console.log("FIELDNAME-->>",fieldName, fieldData);
     fieldData = replaceSymbolsWithEntities(fieldData); // checking all the text if there will be any symbol it will convert to the entity and return the string
     if (i === 0 && fieldName === "PN") {
       prevDoc = true;
