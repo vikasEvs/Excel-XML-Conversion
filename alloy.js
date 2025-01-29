@@ -3,7 +3,7 @@ import fs from "fs";
 import xlsx from 'xlsx';
 
 //read the file with name clientAlloy
-const workbook = xlsx.readFile("clientAlloy.xlsx");
+const workbook = xlsx.readFile("ALL-PB4-24_Final - for xml - 7 Jan.xlsx");
 
 /** Select sheet where data is present, which we want to use */
 const sheet = workbook.Sheets["All Data"];
@@ -75,7 +75,6 @@ for (let i = 0; i < data.length; i++) {
       fieldName !== "PRES" &&
       fieldName !== "OPT"
     ) {
-      console.log("1");
       prevEdit = true;
       const itemName = fieldData;
       const startValue = data[i]["Min"];
@@ -88,7 +87,6 @@ for (let i = 0; i < data.length; i++) {
       fieldName !== "PRES" &&
       fieldName !== "OPT"
       ) {
-      console.log("2");
       if (prevEdit) {
         xmlString += "</edit>";
         prevEdit = false;
@@ -99,7 +97,6 @@ for (let i = 0; i < data.length; i++) {
       }
     }
   } else if (data.length !== i + 1 && data[i + 1]["Fields"] === "PN") {
-    console.log("3");
     prevDoc = false;
   }
 }
@@ -108,4 +105,4 @@ for (let i = 0; i < data.length; i++) {
 xmlString += "</document>";
 xmlString += "</exchange>";
 
-fs.writeFileSync("outputAlloy.xml", xmlString);
+fs.writeFileSync("ALL-PB4-24_Final - for xml - 7 Jan.xml", xmlString);
