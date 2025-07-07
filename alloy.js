@@ -3,7 +3,7 @@ import fs from "fs";
 import xlsx from 'xlsx';
 
 //read the file with name clientAlloy
-const workbook = xlsx.readFile("ALL-PB4-24_Final - for xml - 7 Jan.xlsx");
+const workbook = xlsx.readFile("ALL-PB2-25-07072025.xlsx");
 
 /** Select sheet where data is present, which we want to use */
 const sheet = workbook.Sheets["All Data"];
@@ -57,8 +57,8 @@ for (let i = 0; i < data.length; i++) {
     if(fieldName === "KW"){
       fieldData = fieldData.replace(/#/g, "&lt;br/&gt;");
     }
-    if(fieldName === "TXT"){
-      fieldData = fieldData.replace(/§\s*/g, '&lt;p&gt;').replace(/\n/g, '&lt;/p&gt;');
+    if(fieldName === "TXT"){      
+      fieldData = fieldData = fieldData.replace(/§\s*/g, '&lt;p&gt;').replace(/\r?\n|\r/g, '&lt;/p&gt;');
       fieldData += '&lt;/p&gt;'
     }
     if (fieldName === "EDIT" && fieldName !== "PRES" && fieldName !== "OPT") {
@@ -105,4 +105,4 @@ for (let i = 0; i < data.length; i++) {
 xmlString += "</document>";
 xmlString += "</exchange>";
 
-fs.writeFileSync("ALL-PB4-24_Final - for xml - 7 Jan.xml", xmlString);
+fs.writeFileSync("ALL-PB2-25-07072025.xml", xmlString);
