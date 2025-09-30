@@ -3,7 +3,7 @@ const fs = require("fs");
 const xlsx = require("xlsx");
 
 //read the file with name clientSadiq
-const workbook = xlsx.readFile("SAD-PB3-24-Final 19 Nov.xlsx");
+const workbook = xlsx.readFile("SAD-PB3-2025-with Sample Set_4th Sep.xlsx");
 
 /** Select sheet where data is present, which we want to use */
 const sheet = workbook.Sheets["All Data"];
@@ -152,4 +152,4 @@ if (prevDoc) {
 }
 xmlString += "</exchange>";
 
-fs.writeFileSync("SAD-PB3-24-Final 19 Nov.xml", xmlString);
+fs.writeFileSync("SAD-PB3-2025-with Sample Set_4th Sep.xml", xmlString);
