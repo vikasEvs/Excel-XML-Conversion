@@ -3,7 +3,7 @@ import fs from "fs";
 import xlsx from 'xlsx';
 
 //read the file with name clientAlloy
-const workbook = xlsx.readFile("ALL-PB2-25-07072025.xlsx");
+const workbook = xlsx.readFile("ALL-PB3-25_for xml .xlsx");
 
 /** Select sheet where data is present, which we want to use */
 const sheet = workbook.Sheets["All Data"];
@@ -11,7 +11,6 @@ const sheet = workbook.Sheets["All Data"];
 
 /** Converting sheet data to json data */
 const data = xlsx.utils.sheet_to_json(sheet);
-
 /** Creating xmlString with initial text to come in xml file */
 let xmlString = `<exchange date="${new Date().toISOString()}" type="ALLOYS" schema-version="1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="alloys-v1.2.xsd">`;
 
@@ -105,4 +104,4 @@ for (let i = 0; i < data.length; i++) {
 xmlString += "</document>";
 xmlString += "</exchange>";
 
-fs.writeFileSync("ALL-PB2-25-07072025.xml", xmlString);
+fs.writeFileSync("ALL-PB3-25_for xml .xml", xmlString);
