@@ -24,6 +24,7 @@ function parsePatentNumber(patentNumber) {
 }
 
 function attributeValue(attribute) {
+  if(!attribute) return "";
   attribute = attribute.toLowerCase();
   return attribute === "invention"
     ? "I"
@@ -46,7 +47,7 @@ function actionValue(action) {
 }
 
 // Read the file with file name epoClient.xlsx
-const workbook = xlsx.readFile("RP10453- Complete XML revised.xlsx");
+const workbook = xlsx.readFile("RP10430-PPB1 QC result-2.xlsx");
 
 /** Select sheet where data is present, which we want to use */
 const sheet = workbook.Sheets["Complete Data"];
@@ -99,4 +100,4 @@ function generateXML(jsonData) {
 
 let xmlData = generateXML(jsonData);
 
-fs.writeFileSync("RP10453- Complete XML revised.xml", xmlData);
+fs.writeFileSync("RP10430-PPB1 QC result-2.xml", xmlData);
