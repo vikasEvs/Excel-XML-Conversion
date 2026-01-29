@@ -3,7 +3,7 @@ import fs from "fs";
 import xlsx from 'xlsx';
 
 //read the file with name clientAlloy
-const workbook = xlsx.readFile("ALL-PB3-25_for xml .xlsx");
+const workbook = xlsx.readFile("ALL-PB4-25 Xml Conversion Final After QC Check.xlsx");
 
 /** Select sheet where data is present, which we want to use */
 const sheet = workbook.Sheets["All Data"];
@@ -41,6 +41,7 @@ for (let i = 0; i < data.length; i++) {
   /** First we are getting the data of Column "Fields" and "Components/data" */
   let fieldName = data[i]["Fields"]? data[i]["Fields"].trim(): data[i]["Fields"];
   let fieldData = data[i]["Components/data"];
+  console.log("MIN MAX", data[i]["Min"], data[i]["Max"]);
 
   /** We will append data to xml string from different column only if data will present in this column "Components/data" of the row*/
   if (fieldData) {
@@ -48,10 +49,12 @@ for (let i = 0; i < data.length; i++) {
     if (i === 0 && fieldName === "PN") {
       prevDoc = true;
       xmlString += `<document pn="${fieldData}">`;
+      console.log("PN", fieldData);
     } else if (!prevDoc && fieldName === "PN") {
       prevDoc = true;
       xmlString += "</document>";
       xmlString += `<document pn="${fieldData}">`;
+            console.log("PN", fieldData);
     }
     if(fieldName === "KW"){
       fieldData = fieldData.replace(/#/g, "&lt;br/&gt;");
@@ -104,4 +107,4 @@ for (let i = 0; i < data.length; i++) {
 xmlString += "</document>";
 xmlString += "</exchange>";
 
-fs.writeFileSync("ALL-PB3-25_for xml .xml", xmlString);
+fs.writeFileSync("ALL-PB4-25 Xml Conversion Final After QC Check.xml", xmlString);
